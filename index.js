@@ -1,11 +1,19 @@
+const http = require("http");
 const express = require("express");
-var http = require("http");
+const socketio = require("socket.io");
+const cors = require("cors");
+
 const app = express();
 const port = process.env.PORT || 3000;
 var server = http.createServer(app);
 
 
-var io = require("socket.io")(server);
+var io = socketio(server);
+
+app.use(cors());
+app.use(express.json());
+
+
 
 var sockets=[];
 
@@ -24,7 +32,6 @@ var removesocket=(socket)=>{
 
 
 
-app.use(express.json());
 
 io.on('connection',(socket)=>{
     
