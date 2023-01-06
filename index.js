@@ -14,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 
+var memberNames={};
 
 var sockets=[];
 
@@ -30,7 +31,7 @@ var removesocket=(socket)=>{
     sockets=temp;
 };
 
-
+const rooms = io.of("/").adapter.rooms;
 
 
 io.on('connection',(socket)=>{
@@ -45,6 +46,16 @@ io.on('connection',(socket)=>{
       console.log('connected at '+sockets.length);
       sockets.push(socket);
       socket.join('dummy');
+
+
+      socket.on('join', async(data)=>{
+        
+        socket.join(data['room']);
+
+        memberNames[socket.id]=data['user'];
+
+        print('User '+data['user']+' has joined room '+data['room'])
+      });
 
       socket.on('disconnect',async(_)=>{
         removesocket(socket);
